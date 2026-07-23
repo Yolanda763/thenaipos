@@ -1,101 +1,101 @@
-# 🏪 POS KASIR SYSTEM - Production Ready
+# 🏪 POS Kasir System
 
-Aplikasi Point of Sale (POS) kasir yang modern, real-time, dan user-friendly untuk toko retail, cafe, atau restoran.
+Sistem Penjualan Modern untuk Toko/Warung dengan fitur lengkap.
 
-## ✨ Fitur Utama
+## 📋 Fitur Utama
 
-- ✅ **Multi-User Management** - Admin, Kasir, Manajer
-- ✅ **Real-time Synchronization** - WebSocket untuk sync data instan
-- ✅ **Smart Inventory Management** - Stok otomatis + Alert
-- ✅ **Multiple Payment Methods** - Cash, Transfer, QRIS, Debit/Kredit
-- ✅ **Advanced Reporting** - Laporan penjualan, stok, laba/rugi
-- ✅ **Customer Management** - Profil pelanggan + History transaksi
-- ✅ **Multi-Outlet Support** - Kelola beberapa cabang
-- ✅ **Barcode Scanner Integration** - Support barcode reader
-- ✅ **Digital & Print Receipts** - Cetak/Email/Simpan struk
-- ✅ **Security & Encryption** - JWT Auth, Password Hashing
-- ✅ **Offline Mode** - Bisa transaksi tanpa internet
-- ✅ **Dashboard Analytics** - Visualisasi penjualan real-time
+- ✅ **Sistem Kasir** - Scan barcode dan proses penjualan dengan cepat
+- 📊 **Dashboard** - Laporan real-time penjualan dan keuntungan
+- 📦 **Inventory** - Manajemen stok dan peringatan stok rendah
+- 👥 **Multi User** - Admin, Manajer, dan Kasir dengan permission berbeda
+- 💳 **Multi Payment** - Cash, Transfer, Debit, Credit Card, QRIS
+- 📱 **Real-time Updates** - WebSocket untuk update real-time
+- 📈 **Analytics** - Laporan penjualan harian, bulanan, dan produk terlaris
 
 ## 🛠️ Tech Stack
 
-### Backend
-- Node.js + Express.js
+**Backend:**
+- Node.js + Express
 - TypeScript
-- PostgreSQL + Prisma ORM
-- Socket.io (Real-time)
-- JWT Authentication
-- Winston Logger
+- PostgreSQL
+- Prisma ORM
+- Socket.IO
 
-### Frontend
-- React 18 + TypeScript
-- Vite
+**Frontend:**
+- React 18
+- TypeScript
 - Tailwind CSS
-- Socket.io Client
-- Axios + React Query
-- Redux Toolkit
-- Chart.js / Recharts
+- Recharts (untuk grafik)
+- Lucide Icons
 
-### DevOps
+## 📦 Installation
+
+### Prerequisites
 - Docker & Docker Compose
-- Google Cloud Run
-- PostgreSQL Cloud SQL
-- GitHub Actions (CI/CD)
-
-## 📋 Requirement
-
-- Node.js >= 18
+- Node.js 18+
 - npm atau yarn
-- PostgreSQL >= 12
-- Docker (optional)
 
-## 🚀 Quick Start
+### Dengan Docker Compose (Recommended)
 
-### 1. Clone Repository
 ```bash
+# Clone repository
 git clone https://github.com/Yolanda763/thenaipos.git
 cd thenaipos
+
+# Start semua service
+docker-compose up -d
+
+# Setup database
+docker-compose exec backend npm run migrate
+docker-compose exec backend npm run seed
 ```
 
-### 2. Setup Backend
+Aplikasi akan berjalan di:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3000
+- Database: localhost:5432
+
+### Local Development
+
+**Backend Setup:**
 ```bash
 cd backend
+
+# Install dependencies
 npm install
+
+# Setup environment
 cp .env.example .env
-# Edit .env dengan database credentials
+
+# Setup database
 npm run migrate
 npm run seed
+
+# Start development server
 npm run dev
 ```
 
-### 3. Setup Frontend
+**Frontend Setup:**
 ```bash
 cd frontend
+
+# Install dependencies
 npm install
+
+# Setup environment
 cp .env.example .env
+
+# Start development server
 npm run dev
 ```
 
-### 4. Access Application
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000
-- API Docs: http://localhost:3000/api/docs
+## 🔐 Demo Credentials
 
-## 📊 Default Login Credentials
-
-```
-Admin:
-- Email: admin@thenai.com
-- Password: Admin@123456
-
-Kasir:
-- Email: kasir@thenai.com
-- Password: Kasir@123456
-
-Manajer:
-- Email: manajer@thenai.com
-- Password: Manajer@123456
-```
+| Role   | Email                | Password      |
+|--------|----------------------|---------------|
+| Admin  | admin@thenai.com    | Admin@123456  |
+| Manajer| manajer@thenai.com  | Manajer@123456|
+| Kasir  | kasir@thenai.com    | Kasir@123456  |
 
 ## 📁 Project Structure
 
@@ -103,61 +103,100 @@ Manajer:
 thenaipos/
 ├── backend/
 │   ├── src/
-│   │   ├── config/
+│   │   ├── app.ts
 │   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
 │   │   ├── services/
+│   │   ├── routes/
 │   │   ├── middleware/
-│   │   ├── utils/
-│   │   ├── socket/
-│   │   └── app.ts
+│   │   └── utils/
 │   ├── prisma/
-│   │   └── schema.prisma
-│   ├── .env.example
-│   ├── Dockerfile
+│   │   ├── schema.prisma
+│   │   └── seed.ts
 │   └── package.json
 ├── frontend/
 │   ├── src/
-│   │   ├── components/
 │   │   ├── pages/
+│   │   ├── components/
 │   │   ├── services/
-│   │   ├── store/
-│   │   ├── utils/
-│   │   ├── types/
 │   │   ├── App.tsx
 │   │   └── main.tsx
-│   ├── .env.example
-│   ├── Dockerfile
+│   ├── index.html
 │   └── package.json
 ├── docker-compose.yml
-└── docs/
-    ├── API_DOCUMENTATION.md
-    ├── DATABASE_SCHEMA.md
-    └── DEPLOYMENT.md
+└── README.md
 ```
 
-## 🐳 Docker Deployment
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - Login
+- `POST /api/auth/register` - Register user baru
+- `GET /api/auth/profile` - Get profile (Protected)
+
+### Products
+- `GET /api/products` - Get all products (Protected)
+- `GET /api/products/barcode/:barcode` - Get product by barcode (Protected)
+- `POST /api/products` - Create product (Admin/Manajer)
+- `PUT /api/products/:id` - Update product (Admin/Manajer)
+
+### Sales
+- `POST /api/sales` - Create sale (Protected)
+- `GET /api/sales` - Get sales (Protected)
+- `GET /api/sales/:id` - Get sale detail (Protected)
+
+### Reports
+- `GET /api/reports/sales/daily` - Daily sales report (Admin/Manajer)
+- `GET /api/reports/sales/monthly` - Monthly sales report (Admin/Manajer)
+- `GET /api/reports/products/top` - Top products (Admin/Manajer)
+- `GET /api/reports/inventory` - Inventory report (Admin/Manajer)
+
+## 🚀 Deployment
+
+### Deploy ke Production
 
 ```bash
-docker-compose up -d
+# Build images
+docker-compose -f docker-compose.yml build
+
+# Push ke registry
+docker tag thenaipos-backend your-registry/thenaipos-backend:latest
+docker tag thenaipos-frontend your-registry/thenaipos-frontend:latest
+
+# Deploy
+docker-compose -f docker-compose.yml up -d
 ```
 
-## 📚 Documentation
+## 📝 Environment Variables
 
-- [API Documentation](./docs/API_DOCUMENTATION.md)
-- [Database Schema](./docs/DATABASE_SCHEMA.md)
-- [Deployment Guide](./docs/DEPLOYMENT.md)
+### Backend (.env)
+```
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgresql://user:password@localhost:5432/pos_kasir
+JWT_SECRET=your-secret-key
+JWT_EXPIRY=7d
+CORS_ORIGIN=http://localhost:5173
+```
 
-## 📞 Support & Contact
+### Frontend (.env)
+```
+VITE_API_BASE_URL=http://localhost:3000/api
+VITE_SOCKET_URL=http://localhost:3000
+VITE_APP_NAME=POS Kasir System
+```
 
-- Email: support@thenai.com
-- Issue Tracker: GitHub Issues
+## 🤝 Contributing
+
+Contributions are welcome! Silakan buat pull request atau buka issue untuk saran dan perbaikan.
 
 ## 📄 License
 
-MIT License
+MIT License - feel free to use this project for personal or commercial purposes.
+
+## 👨‍💻 Author
+
+**TheNAI** - Sistem POS Modern untuk Indonesia
 
 ---
 
-**Made with ❤️ by TheNAI Development Team**
+**Happy selling! 🎉**

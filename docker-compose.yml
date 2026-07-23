@@ -3,17 +3,26 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: pos_kasir_db
     environment:
-      POSTGRES_USER: ${DB_USER:-pos_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-pos_password}
-      POSTGRES_DB: ${DB_NAME:-pos_kasir}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: pos_user
+      POSTGRES_PASSWORD: pos_password
+      POSTGRES_DB: pos_kasir
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-pos_user}"]
+      test: ["CMD-SHELL", "pg_isready -U pos_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,39 +31,38 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: pos_kasir_backend
-    environment:
-      NODE_ENV: production
-      DATABASE_URL: postgresql://${DB_USER:-pos_user}:${DB_PASSWORD:-pos_password}@postgres:5432/${DB_NAME:-pos_kasir}
-      JWT_SECRET: ${JWT_SECRET:-your-super-secret-key}
-      PORT: 3000
     ports:
       - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://pos_user:pos_password@postgres:5432/pos_kasir
+      NODE_ENV: development
+      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
+      CORS_ORIGIN: http://localhost:5173
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
-      - ./backend/src:/app/src
+      - ./backend:/app
+      - /app/node_modules
     command: npm run dev
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: pos_kasir_frontend
+    ports:
+      - "5173:5173"
     environment:
       VITE_API_BASE_URL: http://localhost:3000/api
       VITE_SOCKET_URL: http://localhost:3000
-    ports:
-      - "5173:5173"
     depends_on:
       - backend
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
 
 volumes:
   postgres_data:
-
-networks:
-  default:
-    name: pos_kasir_network
